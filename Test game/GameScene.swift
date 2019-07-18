@@ -10,34 +10,86 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
+    private enum Constants {
+        static let spawnDistance: CGFloat = -50
+        static let impulseOnLightNode = CGVector(dx: 0, dy: 30)
+        static let velocityOnConsumableNodes = CGVector(dx: -60, dy: 0)
+    }
     
-    var shieldSprite: SKSpriteNode!
+    private enum ContactTestBitMask {
+        static let noCollision: UInt32 = 0
+        static let lightNode: UInt32 = 1 << 1
+        static let consumableNode: UInt32 = 1 << 2
+    }
+    
+    var lightNode: SKNode!
+    var consumableNodes: [SKNode] = []
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
         backgroundColor = .black
-        loadShield()
+        loadLightNode()
+        loadConsumable()
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        physicsWorld.contactDelegate = self
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate {
+    
+    private func identifyBody(with mask: UInt32,
+                              bodyA: SKPhysicsBody,
+                              bodyB: SKPhysicsBody) -> SKNode {
+        guard let nodeA = bodyA.node,
+            let nodeB = bodyB.node else { return SKNode() }
+        return bodyA.categoryBitMask == mask ? nodeA : nodeB
     }
     
-    private func loadShield() {
-        let shieldAtlas = SKTextureAtlas(named: "Shield.atlas")
-        var shieldArray: [SKTexture] = []
+    func didBegin(_ contact: SKPhysicsContact) {
+        let contactMask = contact.bodyA.contactTestBitMask | contact.bodyB.contactTestBitMask
         
-        let imageCount = shieldAtlas.textureNames.count
-        (1...imageCount).forEach { index in
-            let textureName = "image\(index)"
-            shieldArray.append(shieldAtlas.textureNamed(textureName))
+        switch contactMask {
+            
+        case ContactTestBitMask.lightNode | ContactTestBitMask.consumableNode:
+            let node = identifyBody(with: ContactTestBitMask.consumableNode,
+                                    bodyA: contact.bodyA,
+                                    bodyB: contact.bodyB)
+            guard consumableNodes.contains(node) else { return }
+//            node.removeFromParent()
+            node.physicsBody?.velocity = CGVector.zero
+            loadConsumable()
+            
+        default :
+            return
         }
-        
-        shieldSprite = SKSpriteNode(texture: shieldArray.first)
-        let animateAction = SKAction.animate(with: shieldArray, timePerFrame: 0.1)
-        let shieldAction = SKAction.repeatForever(SKAction.group([ animateAction ]))
-        shieldSprite.run(shieldAction)
-        shieldSprite.position = CGPoint(x: frame.midX, y: frame.midY)
-        addChild(shieldSprite)
-        
-        shieldSprite.physicsBody = SKPhysicsBody(circleOfRadius: shieldSprite.size.width/2)
-        shieldSprite.physicsBody?.restitution = 1.0
+    }
+}
+
+extension GameScene {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        lightNode.physicsBody?.applyImpulse(Constants.impulseOnLightNode)
+    }
+}
+
+extension GameScene {
+    private func loadConsumable() {
+        let node = ConsumableNode(position: CGPoint(x: frame.maxX + Constants.spawnDistance,
+                                                    y: frame.midY))
+        node.physicsBody?.velocity = Constants.velocityOnConsumableNodes
+        node.physicsBody?.contactTestBitMask = ContactTestBitMask.consumableNode
+        node.physicsBody?.collisionBitMask = ContactTestBitMask.noCollision
+        addChild(node)
+        consumableNodes.append(node)
+    }
+}
+
+extension GameScene {
+    private func loadLightNode() {
+        lightNode = LightNode(position: CGPoint(x: frame.midX,
+                                                y: frame.midY))
+        lightNode.physicsBody?.contactTestBitMask = ContactTestBitMask.lightNode
+        lightNode.physicsBody?.collisionBitMask = ContactTestBitMask.noCollision
+        addChild(lightNode)
     }
 }
