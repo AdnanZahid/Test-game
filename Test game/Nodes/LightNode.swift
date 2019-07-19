@@ -15,7 +15,7 @@ class LightNode: SKNode {
         static let twoPi = CGFloat.pi * 2
         static let particleSize: CGFloat = 10
         static let durationOfRotation: TimeInterval = 5
-        static let damping: CGFloat = 100
+        static let damping: CGFloat = 25
         static let impulse = CGVector(dx: 0, dy: 30)
         static let mass: CGFloat = 1.0
         static let springFieldRadius: Float = 50

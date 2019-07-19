@@ -12,7 +12,7 @@ import GameplayKit
 class GameScene: SKScene {
     private enum Constants {
         static let spawnDistance: CGFloat = -50
-        static let impulseOnLightNode = CGVector(dx: 0, dy: 1000)
+        static let impulseOnLightNode = CGVector(dx: 0, dy: 1500)
         static let velocityOnConsumableNodes = CGVector(dx: -60, dy: 0)
         static let consumableNodesRevolutionTime = 1.0
     }
