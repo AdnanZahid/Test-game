@@ -20,10 +20,7 @@ class ConsumableNode: SKNode {
     init(position: CGPoint) {
         super.init()
         
-        guard let consumable = SKEmitterNode(fileNamed: Constants.particleName) else {
-            return
-        }
-        
+        guard let consumable = SKEmitterNode(fileNamed: Constants.particleName) else { return }        
         consumable.particleScale = Constants.scale
         self.position = position
         addChild(consumable)

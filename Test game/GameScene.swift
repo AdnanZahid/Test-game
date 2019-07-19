@@ -63,9 +63,10 @@ extension GameScene: SKPhysicsContactDelegate {
             node.run(SKAction.sequence([
                 // Wait for a second to allow revolution
                 SKAction.wait(forDuration: Constants.consumableNodesRevolutionTime),
-                SKAction.run {
+                SKAction.run { [weak self] in
+                    self?.lightNode.setHasConsumedConsumable()
                     node.removeFromParent()
-                    self.loadConsumable()
+                    self?.loadConsumable()
                 }]))
             
             if lightNode.shouldPickupConsumable() {
