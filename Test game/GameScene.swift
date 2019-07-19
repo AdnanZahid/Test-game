@@ -58,6 +58,8 @@ extension GameScene: SKPhysicsContactDelegate {
             guard let consumableNode = node as? ConsumableNode,
                 consumableNodes.contains(consumableNode) else { return }
             
+            // Using a combination of time out and
+            // Two contact mechanism to consume the consumable
             node.run(SKAction.sequence([
                 // Wait for a second to allow revolution
                 SKAction.wait(forDuration: Constants.consumableNodesRevolutionTime),

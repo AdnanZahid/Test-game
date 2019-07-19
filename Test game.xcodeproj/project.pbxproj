@@ -43,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		844C881822E22F23008AA328 /* Test game.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Test game.entitlements"; sourceTree = "<group>"; };
 		8489F78322E0FBC700F2954D /* LightNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightNode.swift; sourceTree = "<group>"; };
 		8489F78522E0FBD300F2954D /* ConsumableNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumableNode.swift; sourceTree = "<group>"; };
 		84DAEB2C22C6B2CB006450DF /* Test game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +125,7 @@
 		84DAEB2E22C6B2CB006450DF /* Test game */ = {
 			isa = PBXGroup;
 			children = (
+				844C881822E22F23008AA328 /* Test game.entitlements */,
 				8489F78222E0FBA800F2954D /* Nodes */,
 				84E877F722DE5B230091E2D5 /* Atlasses */,
 				84DAEB3322C6B2CB006450DF /* Actions.sks */,
@@ -482,7 +484,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Test game/Test game.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_UIKITFORMAC_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = Q666HR669V;
 				INFOPLIST_FILE = "Test game/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -491,6 +495,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Test-game.Test-game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_UIKITFORMAC = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -500,7 +505,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Test game/Test game.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_UIKITFORMAC_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = Q666HR669V;
 				INFOPLIST_FILE = "Test game/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -509,6 +516,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Test-game.Test-game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_UIKITFORMAC = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
