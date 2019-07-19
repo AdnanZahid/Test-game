@@ -12,8 +12,9 @@ import GameplayKit
 class GameScene: SKScene {
     private enum Constants {
         static let spawnDistance: CGFloat = -50
-        static let impulseOnLightNode = CGVector(dx: 0, dy: 30)
+        static let impulseOnLightNode = CGVector(dx: 0, dy: 1000)
         static let velocityOnConsumableNodes = CGVector(dx: -60, dy: 0)
+        static let consumableNodesRevolutionTime = 1.0
     }
     
     private enum ContactTestBitMask {
@@ -22,8 +23,8 @@ class GameScene: SKScene {
         static let consumableNode: UInt32 = 1 << 2
     }
     
-    var lightNode: SKNode!
-    var consumableNodes: [SKNode] = []
+    var lightNode: LightNode!
+    var consumableNodes: [ConsumableNode] = []
     
     override func sceneDidLoad() {
         super.sceneDidLoad()
@@ -54,11 +55,24 @@ extension GameScene: SKPhysicsContactDelegate {
             let node = identifyBody(with: ContactTestBitMask.consumableNode,
                                     bodyA: contact.bodyA,
                                     bodyB: contact.bodyB)
-            guard consumableNodes.contains(node) else { return }
-//            node.removeFromParent()
-            node.physicsBody?.velocity = CGVector.zero
-            loadConsumable()
+            guard let consumableNode = node as? ConsumableNode,
+                consumableNodes.contains(consumableNode) else { return }
             
+            node.run(SKAction.sequence([
+                // Wait for a second to allow revolution
+                SKAction.wait(forDuration: Constants.consumableNodesRevolutionTime),
+                SKAction.run {
+                    node.removeFromParent()
+                    self.loadConsumable()
+                }]))
+            
+            if lightNode.shouldPickupConsumable() {
+                lightNode.setHasConsumedConsumable()
+                node.removeFromParent()
+                self.loadConsumable()
+            } else {
+                lightNode.setIsNearConsumable()
+            }
         default :
             return
         }
